@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+           
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden; 
+        }
+
+       
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; 
+            
+            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/PINTR.png?raw=true");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover; 
+        }
+
+        
+        .key-image {
+            position: absolute;
+            z-index: 2; 
+            background-position: center center;
+            background-size: contain; 
+        }
+
+        
+        .key-control {
+            top: 35px;
+            left: 35px;
+            width: 115px;  
+            height: 115px; 
+            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/IMG_6270.PNG?raw=true");
+        }
+
+        
+        .key-command {
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%); 
+            width: 135px;  
+            height: 135px; 
+            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/IMG_6265.PNG?raw=true");
+        }
+
+        
+        .key-shift {
+            bottom: 35px;
+            right: 35px;
+            width: 185px;  
+            height: 185px; 
+            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/IMG_6268.PNG?raw=true");
+        }
+
+        
+        .text-banner-image {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%); 
+            width: 100%;
+            height: 95px; 
+            z-index: 3; 
+            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/截屏2026-02-03%20下午4.09.46.png?raw=true");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain; 
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="bg-image"></div>
+    
+    
+    <div class="key-image key-control"></div>
+    <div class="key-image key-command"></div>
+    <div class="key-image key-shift"></div>
+    
+   
+    <div class="text-banner-image"></div>
+</body>
+</html>
