@@ -1,108 +1,453 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mickey's Page</title>
-    <h1>Hello World</h1>
-    <h2>About Me</h2>
-    <p>Hi, my name is Mickey Mouse. I am a Disney character!</p>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cute Fridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      :root {
+        --bg: #fff8ef;
+        --ink: #5b4a5c;
+        --pink: #ffd4e1;
+        --blue: #cfe8ff;
+        --mint: #d5ffe8;
+        --fridge: #f4f8ff;
+        --fridge-border: #aac8ef;
+        --accent: #ff7fa6;
+        --ok: #61c281;
+        --warn: #f4b24f;
+        --danger: #f06b6b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Baloo 2", system-ui, sans-serif;
+        color: var(--ink);
+        background: radial-gradient(circle at 20% 20%, #fff1c9, transparent 35%),
+          radial-gradient(circle at 80% 10%, #ffe2f0, transparent 40%), var(--bg);
+      }
+
+      .page {
+        min-height: 100vh;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 1.5rem;
+      }
+
+      .intro,
+      .panel {
+        background: rgba(255, 255, 255, 0.75);
+        border: 3px solid #fff;
+        border-radius: 24px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 12px 20px rgba(113, 131, 173, 0.15);
+      }
+
+      .intro {
+        grid-column: 1 / -1;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #7f84c2;
+        font-size: 0.95rem;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        line-height: 1.1;
+      }
+
+      .intro p:last-child {
+        margin-top: 0.4rem;
+        font-size: 1.1rem;
+      }
+
+      .fridge-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .fridge {
+        width: min(460px, 100%);
+        perspective: 1300px;
+      }
+
+      .fridge-body {
+        position: relative;
+        border-radius: 28px;
+        border: 4px solid var(--fridge-border);
+        background: linear-gradient(180deg, #ffffff, var(--fridge));
+        min-height: 480px;
+        box-shadow: 0 20px 30px rgba(103, 135, 186, 0.25);
+        overflow: hidden;
+        padding: 1rem;
+      }
+
+      .sticker {
+        position: absolute;
+        z-index: 3;
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        border: 2px solid #fff;
+        color: #7f5d65;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+
+      .sticker-heart {
+        top: 1rem;
+        left: 1rem;
+        background: var(--pink);
+      }
+
+      .sticker-star {
+        top: 1rem;
+        right: 1rem;
+        background: var(--mint);
+      }
+
+      .door-button {
+        position: absolute;
+        z-index: 4;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border: none;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        padding: 0.45rem 1rem;
+        cursor: pointer;
+        box-shadow: 0 8px 14px rgba(240, 117, 159, 0.35);
+      }
+
+      .door {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(150deg, #e7f2ff, #ccddfb);
+        border-right: 4px solid #a2c0ec;
+        border-radius: 24px;
+        transform-origin: left center;
+        transition: transform 380ms ease;
+        z-index: 2;
+      }
+
+      .door-handle {
+        position: absolute;
+        right: 1.1rem;
+        top: 45%;
+        width: 16px;
+        height: 100px;
+        border-radius: 999px;
+        background: #fdf4ff;
+        border: 3px solid #bcccf8;
+      }
+
+      .fridge.open .door {
+        transform: rotateY(-84deg);
+      }
+
+      .inside {
+        height: 100%;
+        padding: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .inside-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.75rem;
+      }
+
+      .stats-text {
+        background: var(--blue);
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.95rem;
+      }
+
+      .food-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .food-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.55rem 0.7rem;
+        background: #fff;
+        border: 2px solid #d9e6fb;
+        border-radius: 14px;
+      }
+
+      .food-name {
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+
+      .food-expiry {
+        font-size: 0.95rem;
+        color: #7a7898;
+      }
+
+      .badge {
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 0.12rem 0.55rem;
+        color: #fff;
+        font-size: 0.88rem;
+      }
+
+      .badge.fresh {
+        background: var(--ok);
+      }
+
+      .badge.soon {
+        background: var(--warn);
+      }
+
+      .badge.expired {
+        background: var(--danger);
+      }
+
+      .panel h2 {
+        margin-bottom: 0.5rem;
+      }
+
+      .food-form {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.25rem;
+        font-weight: 600;
+      }
+
+      input,
+      .food-form button {
+        font: inherit;
+        border-radius: 10px;
+        border: 2px solid #d4d7f8;
+        padding: 0.45rem 0.55rem;
+      }
+
+      input:focus-visible,
+      .food-form button:focus-visible,
+      .door-button:focus-visible {
+        outline: 3px solid #a8d0ff;
+        outline-offset: 2px;
+      }
+
+      .food-form button {
+        border: none;
+        color: #fff;
+        background: #7ba5f6;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      @media (max-width: 820px) {
+        .page {
+          grid-template-columns: 1fr;
         }
 
-        body {
-           
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            overflow: hidden; 
+        .fridge-body {
+          min-height: 420px;
         }
-
-       
-        .bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2; 
-            
-            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/PINTR.png?raw=true");
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover; 
-        }
-
-        
-        .key-image {
-            position: absolute;
-            z-index: 2; 
-            background-position: center center;
-            background-size: contain; 
-        }
-
-        
-        .key-control {
-            top: 40px;
-            left: 40px;
-            width: 120px;  
-            height: 120px; 
-            background-image: url("https://github.com/Yoyo72099/coding-challenge-4/blob/main/IMG_6529.PNG?raw=true");
-        }
-
-        
-        .key-command {
-            bottom: 45px;
-            left: 50%;
-            transform: translateX(-50%); 
-            width: 135px;  
-            height: 135px; 
-            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/IMG_6265.PNG?raw=true");
-        }
-
-        
-        .key-shift {
-            bottom: 35px;
-            right: 35px;
-            width: 185px;  
-            height: 185px; 
-            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/IMG_6268.PNG?raw=true");
-        }
-
-        
-        .text-banner-image {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%); 
-            width: 100%;
-            height: 95px; 
-            z-index: 3; 
-            background-image: url("https://github.com/Yoyo72099/PROJECT-1-Non-linear-Space/blob/main/截屏2026-02-03%20下午4.09.46.png?raw=true");
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: contain; 
-        }
-        @keyframes float1 {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+      }
     </style>
-</head>
-<body>
-    
-    <div class="bg-image"></div>
-    
-    
-    <div class="key-image key-control"></div>
-    <div class="key-image key-command"></div>
-    <div class="key-image key-shift"></div>
-    
-   
-    <div class="text-banner-image"></div>
-</body>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <p class="eyebrow">Everyday object x web</p>
+        <h1>My Cartoon Fridge</h1>
+        <p>
+          Open the fridge, check what's inside, and save food before it expires.
+        </p>
+      </section>
+
+      <section class="fridge-stage">
+        <div class="fridge" id="fridge">
+          <div class="fridge-body">
+            <div class="sticker sticker-heart">love</div>
+            <div class="sticker sticker-star">yum</div>
+
+            <button class="door-button" id="toggleDoor" type="button" aria-expanded="false">
+              Open door
+            </button>
+
+            <div class="door" id="door">
+              <div class="door-handle" aria-hidden="true"></div>
+            </div>
+
+            <div class="inside">
+              <header class="inside-header">
+                <h2>Inside today</h2>
+                <span id="statsText" class="stats-text"></span>
+              </header>
+              <ul id="foodList" class="food-list" aria-live="polite"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Add food</h2>
+        <form id="foodForm" class="food-form">
+          <label>
+            Name
+            <input id="foodName" name="name" type="text" maxlength="30" placeholder="Milk" required />
+          </label>
+          <label>
+            Days until expiry
+            <input id="foodDays" name="days" type="number" min="0" max="60" value="3" required />
+          </label>
+          <button type="submit">Put in fridge</button>
+        </form>
+      </section>
+    </main>
+
+    <template id="foodItemTemplate">
+      <li class="food-item">
+        <div>
+          <p class="food-name"></p>
+          <p class="food-expiry"></p>
+        </div>
+        <span class="badge"></span>
+      </li>
+    </template>
+
+    <script>
+      const STORAGE_KEY = "cute-fridge-items";
+
+      const fridge = document.querySelector("#fridge");
+      const toggleDoorBtn = document.querySelector("#toggleDoor");
+      const foodList = document.querySelector("#foodList");
+      const foodForm = document.querySelector("#foodForm");
+      const foodNameInput = document.querySelector("#foodName");
+      const foodDaysInput = document.querySelector("#foodDays");
+      const statsText = document.querySelector("#statsText");
+      const itemTemplate = document.querySelector("#foodItemTemplate");
+
+      const defaultItems = [
+        { id: crypto.randomUUID(), name: "Milk", daysLeft: 1 },
+        { id: crypto.randomUUID(), name: "Strawberries", daysLeft: 0 },
+        { id: crypto.randomUUID(), name: "Eggs", daysLeft: 5 },
+      ];
+
+      function loadItems() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return defaultItems;
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return defaultItems;
+          return parsed;
+        } catch {
+          return defaultItems;
+        }
+      }
+
+      let items = loadItems();
+
+      function saveItems() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      }
+
+      function statusByDays(daysLeft) {
+        if (daysLeft <= 0) {
+          return { cls: "expired", label: "Expired", message: "Use now!" };
+        }
+        if (daysLeft <= 2) {
+          return { cls: "soon", label: "Soon", message: `${daysLeft} day left` };
+        }
+        return { cls: "fresh", label: "Fresh", message: `${daysLeft} days left` };
+      }
+
+      function renderItems() {
+        foodList.innerHTML = "";
+        let expiredCount = 0;
+
+        items.forEach((item) => {
+          const node = itemTemplate.content.firstElementChild.cloneNode(true);
+          const status = statusByDays(item.daysLeft);
+          if (status.cls === "expired") expiredCount += 1;
+
+          node.querySelector(".food-name").textContent = item.name;
+          node.querySelector(".food-expiry").textContent = status.message;
+
+          const badge = node.querySelector(".badge");
+          badge.className = `badge ${status.cls}`;
+          badge.textContent = status.label;
+
+          foodList.appendChild(node);
+        });
+
+        statsText.textContent = `${items.length} items, ${expiredCount} expired`;
+      }
+
+      function toggleDoor() {
+        const nowOpen = fridge.classList.toggle("open");
+        toggleDoorBtn.textContent = nowOpen ? "Close door" : "Open door";
+        toggleDoorBtn.setAttribute("aria-expanded", String(nowOpen));
+      }
+
+      function addItem(event) {
+        event.preventDefault();
+        const name = foodNameInput.value.trim();
+        const daysLeft = Number(foodDaysInput.value);
+        if (!name || Number.isNaN(daysLeft) || daysLeft < 0) return;
+
+        items.unshift({
+          id: crypto.randomUUID(),
+          name,
+          daysLeft,
+        });
+
+        saveItems();
+        renderItems();
+        foodForm.reset();
+        foodDaysInput.value = "3";
+        foodNameInput.focus();
+      }
+
+      toggleDoorBtn.addEventListener("click", toggleDoor);
+      foodForm.addEventListener("submit", addItem);
+
+      renderItems();
+    </script>
+  </body>
 </html>
