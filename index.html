@@ -34,12 +34,10 @@
 
       .page {
         min-height: 100vh;
-        max-width: 1120px;
+        max-width: 900px;
         margin: 0 auto;
         padding: 1.2rem 1rem 2.4rem;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 260px;
-        gap: 1rem;
+        display: block;
       }
 
       .fridge-stage {
@@ -95,7 +93,7 @@
         border-radius: 30px;
         transform-origin: left center;
         transition: transform 380ms ease;
-        z-index: 2;
+        z-index: 3;
       }
 
       .door-handle {
@@ -119,6 +117,7 @@
         overflow: hidden;
         border-radius: 22px;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(239, 247, 242, 0.7));
+        z-index: 1;
       }
 
       .inside-canvas {
@@ -126,6 +125,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
+        isolation: isolate;
       }
 
       .food-list {
@@ -141,8 +141,8 @@
         position: absolute;
         overflow: hidden;
         border-radius: 0;
-        width: 38%;
-        height: 28%;
+        width: 31%;
+        height: 22%;
       }
 
       .food-photo {
@@ -152,66 +152,9 @@
         display: block;
       }
 
-      .add-panel {
-        align-self: center;
-        background: rgba(239, 247, 242, 0.8);
-        border: 2px dashed #7ea892;
-        border-radius: 20px;
-        padding: 0.9rem;
-        box-shadow: 0 12px 24px rgba(89, 126, 108, 0.18);
-      }
-
-      .add-panel h2 {
-        margin: 0 0 0.4rem;
-        font-size: 1.1rem;
-        color: #4f7562;
-      }
-
-      .add-panel p {
-        margin: 0 0 0.55rem;
-        color: #5f7f70;
-        font-size: 0.93rem;
-      }
-
-      .add-form {
-        display: grid;
-        gap: 0.45rem;
-      }
-
-      .add-form input {
-        border: 1px solid #8fb6a1;
-        border-radius: 10px;
-        padding: 0.48rem 0.55rem;
-        font: inherit;
-        background: rgba(255, 255, 255, 0.95);
-      }
-
-      .add-form button {
-        border: none;
-        border-radius: 12px;
-        background: #6b8f7b;
-        color: #eef8f2;
-        font: inherit;
-        font-weight: 600;
-        padding: 0.42rem 0.65rem;
-        cursor: pointer;
-      }
-
       .door-button:focus-visible {
         outline: 3px solid #b3d3bf;
         outline-offset: 2px;
-      }
-
-      @media (max-width: 900px) {
-        .page {
-          grid-template-columns: 1fr;
-        }
-
-        .add-panel {
-          max-width: 500px;
-          width: 100%;
-          margin: 0 auto;
-        }
       }
 
       @media (max-width: 520px) {
@@ -221,8 +164,8 @@
         }
 
         .food-item {
-          width: 43%;
-          height: 24%;
+          width: 34%;
+          height: 18%;
         }
       }
     </style>
@@ -248,15 +191,6 @@
           </div>
         </div>
       </section>
-
-      <aside class="add-panel">
-        <h2>可以加入食物</h2>
-        <p>贴一张图片链接，放进冰箱。</p>
-        <form id="addForm" class="add-form">
-          <input id="foodImageUrl" type="url" placeholder="https://..." required />
-          <button type="submit">加入</button>
-        </form>
-      </aside>
     </main>
 
     <template id="foodItemTemplate">
@@ -270,8 +204,6 @@
       const toggleDoorBtn = document.querySelector("#toggleDoor");
       const foodList = document.querySelector("#foodList");
       const itemTemplate = document.querySelector("#foodItemTemplate");
-      const addForm = document.querySelector("#addForm");
-      const foodImageUrlInput = document.querySelector("#foodImageUrl");
 
       const defaultItems = [
         {
@@ -297,10 +229,10 @@
       ];
       const items = defaultItems;
       const scatterLayouts = [
-        { left: 6, top: 8, rotate: -8, z: 2 },
-        { left: 56, top: 14, rotate: 7, z: 3 },
-        { left: 10, top: 54, rotate: 5, z: 4 },
-        { left: 54, top: 58, rotate: -7, z: 1 },
+        { left: 9, top: 12, rotate: -8 },
+        { left: 58, top: 16, rotate: 7 },
+        { left: 13, top: 60, rotate: 5 },
+        { left: 56, top: 63, rotate: -7 },
       ];
 
       function shuffledLayouts() {
@@ -328,7 +260,6 @@
           node.style.left = `${layout.left}%`;
           node.style.top = `${layout.top}%`;
           node.style.transform = `rotate(${layout.rotate}deg)`;
-          node.style.zIndex = String(layout.z);
 
           foodList.appendChild(node);
         });
@@ -342,27 +273,7 @@
         toggleDoorBtn.setAttribute("aria-expanded", String(nowOpen));
       }
 
-      function addFoodFromUrl(event) {
-        event.preventDefault();
-        const imageUrl = foodImageUrlInput.value.trim();
-        if (!imageUrl) return;
-
-        items.unshift({
-          id: crypto.randomUUID(),
-          imageUrl,
-          alt: "Added food image",
-        });
-
-        if (items.length > 12) {
-          items.pop();
-        }
-
-        foodImageUrlInput.value = "";
-        renderItems();
-      }
-
       toggleDoorBtn.addEventListener("click", toggleDoor);
-      addForm.addEventListener("submit", addFoodFromUrl);
 
       renderItems();
     </script>
