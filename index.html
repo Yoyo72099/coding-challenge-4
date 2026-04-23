@@ -34,10 +34,21 @@
 
       .page {
         min-height: 100vh;
-        max-width: 900px;
+        max-width: 1120px;
         margin: 0 auto;
         padding: 1.2rem 1rem 2.4rem;
-        display: block;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 260px;
+        gap: 1rem;
+        align-items: start;
+      }
+
+      .page-title {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+        color: #4f7562;
+        letter-spacing: 0.01em;
       }
 
       .fridge-stage {
@@ -152,9 +163,59 @@
         display: block;
       }
 
+      .add-panel {
+        background: rgba(239, 247, 242, 0.8);
+        border: 2px dashed #7ea892;
+        border-radius: 20px;
+        padding: 0.9rem;
+        box-shadow: 0 12px 24px rgba(89, 126, 108, 0.18);
+      }
+
+      .add-panel h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1.1rem;
+        color: #4f7562;
+      }
+
+      .add-panel p {
+        margin: 0 0 0.55rem;
+        color: #5f7f70;
+        font-size: 0.93rem;
+      }
+
+      .add-form {
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .add-form input {
+        border: 1px solid #8fb6a1;
+        border-radius: 10px;
+        padding: 0.45rem 0.5rem;
+        font: inherit;
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .add-form button {
+        border: none;
+        border-radius: 12px;
+        background: #6b8f7b;
+        color: #eef8f2;
+        font: inherit;
+        font-weight: 600;
+        padding: 0.42rem 0.65rem;
+        cursor: pointer;
+      }
+
       .door-button:focus-visible {
         outline: 3px solid #b3d3bf;
         outline-offset: 2px;
+      }
+
+      @media (max-width: 900px) {
+        .page {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 520px) {
@@ -172,6 +233,7 @@
   </head>
   <body>
     <main class="page">
+      <h1 class="page-title">My refrigerator</h1>
       <section class="fridge-stage">
         <div class="fridge open" id="fridge">
           <div class="fridge-body">
@@ -191,6 +253,15 @@
           </div>
         </div>
       </section>
+
+      <aside class="add-panel">
+        <h2>加入食物</h2>
+        <p>选择本地图片，放进冰箱。</p>
+        <form id="addForm" class="add-form">
+          <input id="foodImageInput" type="file" accept="image/*" multiple required />
+          <button type="submit">导入图片</button>
+        </form>
+      </aside>
     </main>
 
     <template id="foodItemTemplate">
@@ -204,6 +275,8 @@
       const toggleDoorBtn = document.querySelector("#toggleDoor");
       const foodList = document.querySelector("#foodList");
       const itemTemplate = document.querySelector("#foodItemTemplate");
+      const addForm = document.querySelector("#addForm");
+      const foodImageInput = document.querySelector("#foodImageInput");
 
       const defaultItems = [
         {
@@ -247,10 +320,20 @@
       function renderItems() {
         foodList.innerHTML = "";
         const layouts = shuffledLayouts();
+        const maxLeft = 69;
+        const maxTop = 78;
 
         items.forEach((item, index) => {
           const node = itemTemplate.content.firstElementChild.cloneNode(true);
-          const layout = layouts[index % layouts.length];
+          const baseLayout = layouts[index % layouts.length];
+          const layout =
+            index < layouts.length
+              ? baseLayout
+              : {
+                  left: Math.floor(Math.random() * maxLeft),
+                  top: Math.floor(Math.random() * maxTop),
+                  rotate: Math.floor(Math.random() * 16) - 8,
+                };
 
           const img = node.querySelector(".food-photo");
           img.src = item.imageUrl;
@@ -273,7 +356,30 @@
         toggleDoorBtn.setAttribute("aria-expanded", String(nowOpen));
       }
 
+      function addFoodImages(event) {
+        event.preventDefault();
+        const files = Array.from(foodImageInput.files || []);
+        if (!files.length) return;
+
+        files.forEach((file) => {
+          const imageUrl = URL.createObjectURL(file);
+          items.unshift({
+            id: crypto.randomUUID(),
+            imageUrl,
+            alt: file.name || "Added food image",
+          });
+        });
+
+        if (items.length > 16) {
+          items.length = 16;
+        }
+
+        addForm.reset();
+        renderItems();
+      }
+
       toggleDoorBtn.addEventListener("click", toggleDoor);
+      addForm.addEventListener("submit", addFoodImages);
 
       renderItems();
     </script>
